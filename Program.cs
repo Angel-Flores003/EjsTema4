@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EjsTema4
 {
@@ -6,34 +8,23 @@ namespace EjsTema4
     {
         static void Main(string[] args)
         {
-            List<Producte> productes = new List<Producte>
-            {
-                new Producte("Pa", 1.2m, "Alimentació"),
-                new Producte("Llet", 0.9m, "Alimentació"),
-                new Producte("Sabó", 2.5m, "Neteja"),
-                new Producte("Portàtil", 799.99m, "Electrònica")
-            };
+            double x = 10, y = 5;
 
-            //Mostrar tots els productes
-            Console.WriteLine("Llista de productes:");
-            foreach (var producte in productes)
+            OperacioMatematica suma = (paramether1, paramether2) => paramether1 + paramether2;
+            OperacioMatematica resta = (paramether1, paramether2) => paramether1 - paramether2;
+            OperacioMatematica multiplicacio = (paramether1, paramether2) => paramether1 * paramether2;
+            OperacioMatematica divisio = (paramether1, paramether2) => paramether2 != 0 ? paramether1 / paramether2 : double.NaN;
+
+            double ExecutarOperacio(double paramether1, double paramether2, OperacioMatematica operacio)
             {
-                Console.WriteLine($"Nom: {producte.Nom}, Preu: {producte.Preu}, Categoria: {producte.Categoria}");
+                return operacio(paramether1, paramether2);
             }
 
-            //Agrupar els productes per categoria.
-            var productesPerCategoria = productes.GroupBy(p => p.Categoria);            
-
-            //Mostrar el nom i preu de cada producte agrupat per categoria
-            Console.WriteLine("\nProductes agrupats per categoria:");
-            foreach (var categoria in productesPerCategoria)
-            {
-                Console.WriteLine($"Categoria: {categoria.Key}");
-                foreach (var producte in categoria)
-                {
-                    Console.WriteLine($"  Nom: {producte.Nom}, Preu: {producte.Preu}");
-                }
-            }
+            Console.WriteLine($"Suma: {ExecutarOperacio(x, y, suma)}");
+            Console.WriteLine($"Resta: {ExecutarOperacio(x, y, resta)}");
+            Console.WriteLine($"Multiplicació: {ExecutarOperacio(x, y, multiplicacio)}");
+            Console.WriteLine($"Divisió: {ExecutarOperacio(x, y, divisio)}");
         }
     }
+    public delegate double OperacioMatematica(double paramether1, double paramether2); 
 }
