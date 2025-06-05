@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EjsTema4
@@ -10,52 +11,40 @@ namespace EjsTema4
     {
         static void Main(string[] args)
         {
-            string dataneix;
-            int dia, mes, any;
+            string fitxer = "estudiants.json";
 
-            Console.WriteLine("Introdueïx una data en fotmat (dd//MM/yyyy)");
-            dataneix = Console.ReadLine();
-
-
-            if (DateTime.TryParseExact(dataneix, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataNaixement))
+            List<Estudiant> estudiants = new List<Estudiant>
             {
-                DateTime avui = DateTime.Today;
+                new Estudiant(1, "Joan", "Pérez", 20, 8.6),
+                new Estudiant(2, "Maria", "García", 22, 3.0),
+                new Estudiant(3, "Jordi", "López", 21, 1.5),
+                new Estudiant(4, "Anna", "Martínez", 19, 9.2)
+            };
 
-                // Calcular edat exacta
-                any = avui.Year - dataNaixement.Year;
-                mes = avui.Month - dataNaixement.Month;
-                dia = avui.Day - dataNaixement.Day;
+            //Desi la llista en format JSON
+            var json = JsonSerializer.Serialize(estudiants, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(fitxer, json);
 
-                if (dia < 0)
+            Console.WriteLine("Llista d'estudiants en format JSON guardada correctament");
+
+            //Llegeixi el fitxer "estudiants.json"
+            if (File.Exists(fitxer))
+            {
+                string jsonFromFile = File.ReadAllText(fitxer);
+                List<Estudiant> estudiantsFromFile = JsonSerializer.Deserialize<List<Estudiant>>(jsonFromFile);
+                
+                //Mostra la llista d'estudiants ordenades per nota mitjana (de major a menor)
+                List<Estudiant> estudiantsOrdenats = estudiantsFromFile.OrderByDescending(e => e.NotaMitjana).ToList();
+                
+                Console.WriteLine("Llista d'estudiants ordenada per nota mitjana (de major a menor):");
+                foreach (var estudiant in estudiantsOrdenats)
                 {
-                    mes--;
-                    dia += DateTime.DaysInMonth(avui.Year, (avui.Month == 1) ? 12 : avui.Month - 1);
+                    Console.WriteLine(estudiant);
                 }
-
-                if (mes < 0)
-                {
-                    any--;
-                    mes += 12;
-                }
-
-                Console.WriteLine($"\nTens {any} anys, {mes} mesos i {dia} dies.");
-
-                // Dia de la setmana
-                Console.WriteLine($"Vas néixer un {dataNaixement.ToString("dddd", new CultureInfo("ca-ES"))}.");
-
-                // Proper aniversari
-                DateTime properAniversari = new DateTime(avui.Year, dataNaixement.Month, dataNaixement.Day);
-                if (properAniversari < avui)
-                {
-                    properAniversari = properAniversari.AddYears(1);
-                }
-
-                int diesFalten = (properAniversari - avui).Days;
-                Console.WriteLine($"Falten {diesFalten} dies pel teu proper aniversari.");
             }
             else
             {
-                Console.WriteLine("Data no vàlida.");
+                Console.WriteLine("El fitxer no existeix.");
             }
         }
     }    
