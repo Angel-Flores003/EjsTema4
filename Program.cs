@@ -1,18 +1,52 @@
-﻿namespace EjsTema4
+﻿using System.Collections;
+
+namespace EjsTema4
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            //DateTime i string
-            Pair<DateTime, string> pair1 = new Pair<DateTime, string>(DateTime.Now, "Data i hora actual");
-            var values1 = pair1.GetValues();
-            Console.WriteLine($"Data: {values1.Item1}, Descripció: {values1.Item2}");
+            Hashtable dades = new Hashtable();
+            dades["nom"] = "Joan";
+            dades["edat"] = 30;
+            dades["ciutat"] = "Barcelona";
+            dades["programador"] = true;
 
-            //int y List<string>
-            Pair<int, List<string>> pair2 = new Pair<int, List<string>>(3, new List<string> { "Element1", "Element2", "Element3" });
-            var values2 = pair2.GetValues();
-            Console.WriteLine($"Número: {values2.Item1}, Llista: {string.Join(", ", values2.Item2)}");
+            // Mostrar les dades
+            Console.WriteLine("Dades de la persona:");
+            foreach (DictionaryEntry entry in dades)
+            {
+                Console.WriteLine($"{entry.Key}: {entry.Value}");
+            }
+
+            // Comprovar si la clau "professio" existeix i l'afegeix si no existeix
+            if (!dades.ContainsKey("professio"))
+            {
+                dades["professio"] = "Desenvolupador";
+                Console.WriteLine("\nS'ha afegit la clau 'professio'.");
+            }
+            else
+            {
+                Console.WriteLine("\nLa clau 'professio' ja existeix.");
+            }
+
+            //Elimina la clau "programador"
+            if (dades.ContainsKey("programador"))
+            {
+                dades.Remove("programador");
+                Console.WriteLine("\nS'ha eliminat la clau 'programador'.");
+            }
+            else
+            {
+                Console.WriteLine("\nLa clau 'programador' no existeix.");
+            }
+
+            // Mostrar les dades actualitzades
+            Console.WriteLine("\nDades actualitzades de la persona:");
+            foreach (DictionaryEntry entry in dades)
+            {
+                Console.WriteLine($"{entry.Key}: {entry.Value}");
+            }
         }
     }
 }
