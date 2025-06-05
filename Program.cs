@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.Globalization;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EjsTema4
 {
@@ -8,23 +10,53 @@ namespace EjsTema4
     {
         static void Main(string[] args)
         {
-            double x = 10, y = 5;
+            string dataneix;
+            int dia, mes, any;
 
-            OperacioMatematica suma = (paramether1, paramether2) => paramether1 + paramether2;
-            OperacioMatematica resta = (paramether1, paramether2) => paramether1 - paramether2;
-            OperacioMatematica multiplicacio = (paramether1, paramether2) => paramether1 * paramether2;
-            OperacioMatematica divisio = (paramether1, paramether2) => paramether2 != 0 ? paramether1 / paramether2 : double.NaN;
+            Console.WriteLine("Introdueïx una data en fotmat (dd//MM/yyyy)");
+            dataneix = Console.ReadLine();
 
-            double ExecutarOperacio(double paramether1, double paramether2, OperacioMatematica operacio)
+
+            if (DateTime.TryParseExact(dataneix, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataNaixement))
             {
-                return operacio(paramether1, paramether2);
-            }
+                DateTime avui = DateTime.Today;
 
-            Console.WriteLine($"Suma: {ExecutarOperacio(x, y, suma)}");
-            Console.WriteLine($"Resta: {ExecutarOperacio(x, y, resta)}");
-            Console.WriteLine($"Multiplicació: {ExecutarOperacio(x, y, multiplicacio)}");
-            Console.WriteLine($"Divisió: {ExecutarOperacio(x, y, divisio)}");
+                // Calcular edat exacta
+                any = avui.Year - dataNaixement.Year;
+                mes = avui.Month - dataNaixement.Month;
+                dia = avui.Day - dataNaixement.Day;
+
+                if (dia < 0)
+                {
+                    mes--;
+                    dia += DateTime.DaysInMonth(avui.Year, (avui.Month == 1) ? 12 : avui.Month - 1);
+                }
+
+                if (mes < 0)
+                {
+                    any--;
+                    mes += 12;
+                }
+
+                Console.WriteLine($"\nTens {any} anys, {mes} mesos i {dia} dies.");
+
+                // Dia de la setmana
+                Console.WriteLine($"Vas néixer un {dataNaixement.ToString("dddd", new CultureInfo("ca-ES"))}.");
+
+                // Proper aniversari
+                DateTime properAniversari = new DateTime(avui.Year, dataNaixement.Month, dataNaixement.Day);
+                if (properAniversari < avui)
+                {
+                    properAniversari = properAniversari.AddYears(1);
+                }
+
+                int diesFalten = (properAniversari - avui).Days;
+                Console.WriteLine($"Falten {diesFalten} dies pel teu proper aniversari.");
+            }
+            else
+            {
+                Console.WriteLine("Data no vàlida.");
+            }
         }
-    }
-    public delegate double OperacioMatematica(double paramether1, double paramether2); 
+    }    
 }
