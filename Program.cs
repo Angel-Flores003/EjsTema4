@@ -6,24 +6,34 @@ namespace EjsTema4
     {
         static void Main(string[] args)
         {
-            List<int> numeros = new List<int> { 42, 15, 8, 23, 97, 16 };
-
-            //Flitrar els números parells amb LINQ
-            var numerosParells = numeros.Where(n => n % 2 == 0);
-
-            //Ordenar els números parells de forma ascendent
-            var numerosParellsOrdenats = numerosParells.OrderBy(n => n);
-            Console.WriteLine("Números parells ordenats:");
-            
-            foreach (var numero in numerosParellsOrdenats)
+            List<Producte> productes = new List<Producte>
             {
-                Console.WriteLine(numero);
+                new Producte("Pa", 1.2m, "Alimentació"),
+                new Producte("Llet", 0.9m, "Alimentació"),
+                new Producte("Sabó", 2.5m, "Neteja"),
+                new Producte("Portàtil", 799.99m, "Electrònica")
+            };
+
+            //Mostrar tots els productes
+            Console.WriteLine("Llista de productes:");
+            foreach (var producte in productes)
+            {
+                Console.WriteLine($"Nom: {producte.Nom}, Preu: {producte.Preu}, Categoria: {producte.Categoria}");
             }
 
-            //Suma dels números parells
-            var sumaNumerosParells = numerosParellsOrdenats.Sum();
+            //Agrupar els productes per categoria.
+            var productesPerCategoria = productes.GroupBy(p => p.Categoria);            
 
-            Console.WriteLine($"Suma dels números parells: {sumaNumerosParells}");
+            //Mostrar el nom i preu de cada producte agrupat per categoria
+            Console.WriteLine("\nProductes agrupats per categoria:");
+            foreach (var categoria in productesPerCategoria)
+            {
+                Console.WriteLine($"Categoria: {categoria.Key}");
+                foreach (var producte in categoria)
+                {
+                    Console.WriteLine($"  Nom: {producte.Nom}, Preu: {producte.Preu}");
+                }
+            }
         }
     }
 }
