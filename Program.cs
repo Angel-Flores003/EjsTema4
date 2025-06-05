@@ -6,47 +6,24 @@ namespace EjsTema4
     {
         static void Main(string[] args)
         {
-            Hashtable dades = new Hashtable();
-            dades["nom"] = "Joan";
-            dades["edat"] = 30;
-            dades["ciutat"] = "Barcelona";
-            dades["programador"] = true;
+            List<int> numeros = new List<int> { 42, 15, 8, 23, 97, 16 };
 
-            // Mostrar les dades
-            Console.WriteLine("Dades de la persona:");
-            foreach (DictionaryEntry entry in dades)
-            {
-                Console.WriteLine($"{entry.Key}: {entry.Value}");
-            }
+            //Flitrar els números parells amb LINQ
+            var numerosParells = numeros.Where(n => n % 2 == 0);
 
-            // Comprovar si la clau "professio" existeix i l'afegeix si no existeix
-            if (!dades.ContainsKey("professio"))
+            //Ordenar els números parells de forma ascendent
+            var numerosParellsOrdenats = numerosParells.OrderBy(n => n);
+            Console.WriteLine("Números parells ordenats:");
+            
+            foreach (var numero in numerosParellsOrdenats)
             {
-                dades["professio"] = "Desenvolupador";
-                Console.WriteLine("\nS'ha afegit la clau 'professio'.");
-            }
-            else
-            {
-                Console.WriteLine("\nLa clau 'professio' ja existeix.");
+                Console.WriteLine(numero);
             }
 
-            //Elimina la clau "programador"
-            if (dades.ContainsKey("programador"))
-            {
-                dades.Remove("programador");
-                Console.WriteLine("\nS'ha eliminat la clau 'programador'.");
-            }
-            else
-            {
-                Console.WriteLine("\nLa clau 'programador' no existeix.");
-            }
+            //Suma dels números parells
+            var sumaNumerosParells = numerosParellsOrdenats.Sum();
 
-            // Mostrar les dades actualitzades
-            Console.WriteLine("\nDades actualitzades de la persona:");
-            foreach (DictionaryEntry entry in dades)
-            {
-                Console.WriteLine($"{entry.Key}: {entry.Value}");
-            }
+            Console.WriteLine($"Suma dels números parells: {sumaNumerosParells}");
         }
     }
 }
